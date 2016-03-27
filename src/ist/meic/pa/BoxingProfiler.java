@@ -4,6 +4,7 @@ package ist.meic.pa;
 import javassist.*;
 import javassist.expr.ExprEditor;
 import javassist.expr.FieldAccess;
+import javassist.expr.MethodCall;
 
 import java.io.IOException;
 import java.lang.reflect.Constructor;
@@ -33,7 +34,15 @@ public class BoxingProfiler {
 
             for (CtMethod ctMethod : cc.getDeclaredMethods()){
                 System.out.println(ctMethod.getLongName());
-
+                
+                ctMethod.instrument(
+                        new ExprEditor() {
+                            public void edit(MethodCall m)
+                                          throws CannotCompileException
+                            {
+                                System.out.println(m.getClassName() + "." + m.getMethodName() + " " + m.getSignature());
+                            }
+                        });
 
             }
 
